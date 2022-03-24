@@ -15,22 +15,47 @@ const iniciarSesionConApi = async (email, password) => {
         const { token } = await response.json()
         localStorage.setItem('jwt-token', token) //persistir el js, lo que significa que va a quedar guardado en el navegador
     } catch (err) {
-        console.error(`Error: ${err} `)
+        console.error(`Error: ${err}`)
     }
 }
 
+const consumirDatosApiCovid = async () => {
+    try {
+        const jwtToken = localStorage.getItem('jwt-token')
+        const response = await fetch('http://localhost:3000/api/total',
+            {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                }
+            })
+        const data = await response.json()
+        return data
+    } catch (err) {
+        console.error(`Error: ${err} `)
+        return []
+    }
+}
 
 console.log(formularioSelector, emailSelector, passwordSelector)
+
+const pintarGraficos = (datosParaGrafico) => {
+    
+}
 
 formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
     console.log('hola soy un formulario')
+    // Telly.Hoeger@billy.biz
     const emailValor = emailSelector.value
     const passwordValor = passwordSelector.value
 
     await iniciarSesionConApi(emailValor, passwordValor)
     const jwtToken = localStorage.getItem('jwt-token')
     console.log(jwtToken)
+    const resultado = await consumirDatosApiCovid()
+    console.log(resultado)
+    pintarGraficos(resultado)
 })
 
 
