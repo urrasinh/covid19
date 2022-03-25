@@ -30,18 +30,83 @@ const consumirDatosApiCovid = async () => {
                 }
             })
         const data = await response.json()
-        return data
+        return data.data
     } catch (err) {
         console.error(`Error: ${err} `)
         return []
     }
 }
 
-console.log(formularioSelector, emailSelector, passwordSelector)
+//console.log(formularioSelector, emailSelector, passwordSelector)
+
+
 
 const pintarGraficos = (datosParaGrafico) => {
-    
+    const datosFiltradosContagio = datosParaGrafico.filter(datoPais => {
+        return datoPais.confirmed >= 10000000
+    })
+
+    const ctx = document.getElementById('grafico');
+
+    const data = {
+        labels: datosFiltradosContagio.map(p => p.location),
+        datasets: [
+            {
+                label: 'Confirmados',
+                data: datosFiltradosContagio.map(p => p.confirmed),
+                borderColor: 'red',
+                backgroundColor: 'red',
+                yAxisID: 'y1'
+            },
+            {
+                label: 'Muertos',
+                data: datosFiltradosContagio.map(p => p.deaths),
+                borderColor: 'blue',
+                backgroundColor: 'blue',
+                yAxisID: 'y2'
+            }
+        ]
+    };
+
+    const config = {
+        type: 'bar',
+        data: data,
+        options: {
+            responsive: true,
+            plugins: {
+                legend: {
+                    position: 'top',
+                },
+                title: {
+                    display: true,
+                    text: 'Chart.js Bar Chart'
+                },
+            },
+            scales: {
+                y1: {
+                    type: 'linear',
+                    display: true,
+                    position: 'left',
+                },
+                y2: {
+                    type: 'linear',
+                    display: true,
+                    position: 'right',
+
+                    // grid line settings
+                    grid: {
+                        drawOnChartArea: false, // only want the grid lines for one axis to show up
+                    },
+                },
+            }
+        },
+    };
+
+    const myChart = new Chart(ctx, config)
 }
+
+
+
 
 formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
@@ -59,68 +124,3 @@ formularioSelector.addEventListener('submit', async (event) => {
 })
 
 
-
-
-// const ctx = document.getElementById('grafico');
-
-// const graficoWeb = () => {
-//     fetch(`http://localhost:3000/api/total`).then((respuesta) => {
-//         respuesta.json().then((data) => {
-//             console.log(data)
-//             grafico(data)
-
-//         })
-//     })
-// }
-
-
-// const myChart = new Chart(ctx, {
-//     type: 'bar',
-//     data: {
-//         labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple', 'Orange'],
-//         datasets: [{
-//             label: '# of Votes',
-//             data: [12, 19, 3, 5, 2, 3],
-//             backgroundColor: [
-//                 'rgba(255, 99, 132, 0.2)',
-//                 'rgba(54, 162, 235, 0.2)',
-//                 'rgba(255, 206, 86, 0.2)',
-//                 'rgba(75, 192, 192, 0.2)',
-//                 'rgba(153, 102, 255, 0.2)',
-//                 'rgba(255, 159, 64, 0.2)'
-//             ],
-//             borderColor: [
-//                 'rgba(255, 99, 132, 1)',
-//                 'rgba(54, 162, 235, 1)',
-//                 'rgba(255, 206, 86, 1)',
-//                 'rgba(75, 192, 192, 1)',
-//                 'rgba(153, 102, 255, 1)',
-//                 'rgba(255, 159, 64, 1)'
-//             ],
-//             borderWidth: 1
-//         }]
-//     },
-//     options: {
-//         scales: {
-//             y: {
-//                 beginAtZero: true
-//             }
-//         }
-//     }
-// });
-
-
-// /*
-// let alumnos = [
-//     {nombre: 'Juan', edad: 24},
-//     {nombre: 'Pedro', edad: 19},
-//     {nombre: 'Maria', edad: 22},
-//     {nombre: 'Jose', edad: 28},
-//     {nombre: 'Diego', edad: 18},
-//     ]
-//     let alumnosNuevo = alumnos.map(alumno => {
-//     alumno.esMayor = alumno.edad > 18
-//     return alumno
-//     })
-
-//     */
