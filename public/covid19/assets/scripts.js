@@ -130,7 +130,6 @@ formularioSelector.addEventListener('submit', async (event) => {
 
 const crearTabla = async () => {
     const mostrarDatos = await consumirDatosApiCovid()
-    console.log(hola)
     console.log(mostrarDatos)
 
 
