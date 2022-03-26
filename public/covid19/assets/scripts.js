@@ -1,7 +1,7 @@
 const formularioSelector = document.querySelector('#formulario')
 const emailSelector = document.querySelector('#email')
 const passwordSelector = document.querySelector('#password')
-
+const mostrarTablaSelector = document.querySelector('#cuerpo-tabla')
 
 // funcionalidad para iniciar sesión con la api
 const iniciarSesionConApi = async (email, password) => {
@@ -37,7 +37,7 @@ const consumirDatosApiCovid = async () => {
     }
 }
 
-//console.log(formularioSelector, emailSelector, passwordSelector)
+
 
 
 
@@ -95,7 +95,7 @@ const pintarGraficos = (datosParaGrafico) => {
 
                     // grid line settings
                     grid: {
-                        drawOnChartArea: false, // only want the grid lines for one axis to show up
+                        drawOnChartArea: false,
                     },
                 },
             }
@@ -110,17 +110,84 @@ const pintarGraficos = (datosParaGrafico) => {
 
 formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
-    console.log('hola soy un formulario')
-    // Telly.Hoeger@billy.biz
-    const emailValor = emailSelector.value
-    const passwordValor = passwordSelector.value
+    // TODO: se comentaron y remplaron las const entregando de inmediato los datos 
+    const emailValor = "Telly.Hoeger@billy.biz"
+    const passwordValor = "secret"
+    //const emailValor = emailSelector.value
+    //const passwordValor = passwordSelector.value
 
     await iniciarSesionConApi(emailValor, passwordValor)
     const jwtToken = localStorage.getItem('jwt-token')
     console.log(jwtToken)
     const resultado = await consumirDatosApiCovid()
-    console.log(resultado)
+    console.log(resultado)    
     pintarGraficos(resultado)
 })
 
 
+
+// Intentando imprimir datos Api en tabla :S
+
+const crearTabla = async () => {
+    const mostrarDatos = await consumirDatosApiCovid()
+    console.log(hola)
+    console.log(mostrarDatos)
+
+
+    const crearTd = (texto) => {
+        const text = document.createTextNode(texto);
+        const td = document.createElement("td");
+        td.appendChild(text);
+        return td;
+    };
+
+    const crearTr = () => {
+        return document.createElement("tr");
+    };
+
+    const manejadorDeClick = (e) => {
+        const indice = e.target.dataset.indice;
+        const location = e.target.dataset.location;
+        console.log(indice, location);
+        console.log(data[indice]);
+    };
+
+    const crearTabla = (array) => {
+        mostrarTablaSelector.innerHTML = `
+        <tr>
+        <th scope="col">LOCATION</th>
+        <th scope="col">CONFIRMED</th>
+        <th scope="col">DEATHS</th>
+        <th scope="col">RECOVERED</th>
+        <th scope="col">ACTIVE</th>
+        <th scope="col">DETAILS</th>
+        </tr>`;
+        
+        for (let i = 0; i < array.length; i++) {
+            const tr = crearTr();
+            tr.appendChild(crearTd(array[i].location));
+            tr.appendChild(crearTd(array[i].confirmed));
+            tr.appendChild(crearTd(array[i].deaths));
+            tr.appendChild(crearTd(array[i].recovered));
+            tr.appendChild(crearTd(array[i].active));
+
+            const tdButton = crearTd("");
+            const button = document.createElement("button");
+            button.dataset.location = array[i].location;
+            button.dataset.indice = i;
+            button.addEventListener("click", manejadorDeClick);
+
+            button.classList.add("btn", "btn-link", "boton-modal");
+            const buttonText = document.createTextNode("Ver detalles");
+            button.appendChild(buttonText);
+            tdButton.appendChild(button);
+            tr.appendChild(tdButton);
+
+            mostrarTablaSelector.appendChild(tr);
+        }
+    };
+
+
+    crearTabla(mostrarDatos);
+    
+}
