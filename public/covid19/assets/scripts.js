@@ -3,6 +3,7 @@ const emailSelector = document.querySelector('#email')
 const passwordSelector = document.querySelector('#password')
 const mostrarTablaSelector = document.querySelector('#cuerpo-tabla')
 
+
 // funcionalidad para iniciar sesión con la api
 const iniciarSesionConApi = async (email, password) => {
     console.log(email, password)
@@ -34,6 +35,29 @@ const consumirDatosApiCovid = async () => {
     } catch (err) {
         console.error(`Error: ${err} `)
         return []
+    }
+}
+const datoModalPais = async (pais) => {
+    const jwtToken = localStorage.getItem('jwt-token')
+    try {
+        const response = await fetch(`http://localhost:3000/api/countries/${pais}`,
+            {
+                method:
+                    'GET',
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                }
+
+            })
+        const { data } = await response.json()
+        console.log(data)
+        return data
+        //$('#exampleModal').modal('toggle')
+        //const modalChartSelector = document.querySelector('#modal-country')
+        //crearChartModal(data.location, data.confirmed, data.deaths, data.recovered, data.active, modalChartSelector)
+    }
+    catch (error) {
+        console.log(error)
     }
 }
 
@@ -103,8 +127,6 @@ const pintarGraficos = (datosParaGrafico) => {
 }
 
 
-
-
 formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
     // TODO: se comentaron y remplaron las const entregando de inmediato los datos
@@ -137,11 +159,17 @@ const crearTr = () => {
     return document.createElement("tr");
 };
 
-const manejadorDeClick = (e) => {
+const manejadorDeClick = async (e) => {
     const indice = e.target.dataset.indice;
     const location = e.target.dataset.location;
     console.log(indice, location);
-    console.log(data[indice]);
+    const pais = await datoModalPais(location)
+    console.log(pais)
+    const myModal = new bootstrap.Modal(
+        document.getElementById('exampleModal'),
+        {})
+    //mostrar modal
+    myModal.show()
 };
 
 const crearTabla = (array) => {
@@ -182,5 +210,10 @@ const crearTabla = (array) => {
 const imprimirTabla = async () => {
     const mostrarDatos = await consumirDatosApiCovid()
     console.log(mostrarDatos)
-crearTabla(mostrarDatos)
+    crearTabla(mostrarDatos)
 }
+
+//realizando el modal
+
+/// seleccion de los botones
+
