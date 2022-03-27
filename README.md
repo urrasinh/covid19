@@ -1,4 +1,4 @@
-# covid19
+# COVID-19
 
 
 - [ ] Para ingresar a ver los archivos del proyecto, dirijase a la carpeta jwt-example-desafioLatam 3, 
