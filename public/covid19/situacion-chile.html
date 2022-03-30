@@ -22,11 +22,14 @@
                     <li class="nav-item">
                         <a class="nav-link active" aria-current="page" href="#">Home</a>
                     </li>
-                    <li class="nav-item">
+                    <li class="nav-item" id="menu-item-situacion-chile">
                         <a class="nav-link" href="#formulario">Situación Chile</a>
                     </li>
-                    <li class="nav-item">
-                        <span class="nav-link boton-modal" id="boton-login" href="">Iniciar sesión</span>
+                    <li class="nav-item" id="menu-item-login">
+                        <span class="nav-link boton-modal" id="boton-login" >Iniciar sesión</span>
+                    </li>
+                    <li class="nav-item" id="menu-item-logout">
+                        <span class="nav-link boton-modal" id="boton-logout">Cerrar sesión</span>
                     </li>
                 </ul>
             </div>
@@ -62,7 +65,7 @@
             </div>
             <button type="submit" class="btn btn-primary">Entrar</button>
         </form>  
-        <canvas id="grafico-modal"></canvas>
+       
        </div>
        <div class="modal-footer">
            <button type="button" class="btn btn-secondary cerrar-modal" data-bs-dismiss="modal">

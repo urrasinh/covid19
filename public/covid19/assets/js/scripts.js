@@ -4,6 +4,7 @@ const passwordSelector = document.querySelector('#password')
 const mostrarTablaSelector = document.querySelector('#cuerpo-tabla')
 
 
+
 // funcionalidad para iniciar sesión con la api
 const iniciarSesionConApi = async (email, password) => {
     console.log(email, password)
