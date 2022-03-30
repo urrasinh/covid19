@@ -31,53 +31,97 @@ const postData = async (email, password) => {
     }
 }
 
+
+// llamado a la Api Confirmed
+const consumirDatosApiConfirmed = async () => {
+    try {
+        const jwtToken = localStorage.getItem('jwt-token')
+        //console.log(jwtToken)
+        const response = await fetch('http://localhost:3000/api/confirmed',
+            {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                }
+            })
+        const { data } = await response.json()
+        //console.log(data)
+        return data
+    } catch (err) {
+        console.error(`Error: ${err} `)
+
+    }
+}
+
+// llamado a la Api Recovered
+const consumirDatosApiRecovered = async () => {
+    try {
+        const jwtToken = localStorage.getItem('jwt-token')
+        //console.log(jwtToken)
+        const response = await fetch('http://localhost:3000/api/recovered',
+            {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                }
+            })
+        const { data } = await response.json()
+        //console.log(data)
+        return data
+    } catch (err) {
+        console.error(`Error: ${err} `)
+
+    }
+}
+
+// llamado a la Api Deaths
+const consumirDatosApiDeaths = async () => {
+    try {
+        const jwtToken = localStorage.getItem('jwt-token')
+        const response = await fetch('http://localhost:3000/api/deaths',
+            {
+                method: 'GET',
+                headers: {
+                    Authorization: `Bearer ${jwtToken}`
+                }
+            })
+        const { data } = await response.json()
+        //console.log(data)
+        return data
+    } catch (err) {
+        console.error(`Error: ${err} `)
+
+    }
+}
+
 formularioSelector.addEventListener("submit", async (event) => {
     event.preventDefault()
     const dataUser = await postData(emailSelector.value, passwordSelector.value)
-    console.log(dataUser)
+    //console.log(dataUser)
     iniciarSesionModal.hide()
     // agregar elementos al menu
     menuItemSituacionChileSelector.style.display = "list-item"
     menuItemLogoutSelector.style.display = "list-item"
     // ocultando item menu (iniciar sesion)
     menuItemLoginSelector.style.display = "none"
-
+    // llamado asincrono de Apis
+    await consumirDatosApiConfirmed()
+    await consumirDatosApiRecovered()
+    await consumirDatosApiDeaths()
 })
 
 botonLoginSelector.addEventListener("click", () => {
     iniciarSesionModal.show()
 })
-/*
+
 botonLogoutSelector.addEventListener("click", () => {
     localStorage.setItem('jwt-token', '')
     menuItemSituacionChileSelector.style.display = "none"
     menuItemLogoutSelector.style.display = "none"
     menuItemLoginSelector.style.display = "list-item"
 })
-*/
+
 //const manejadorClick = () => {
-/*
-    const datoModalPais = async () => {
-        const jwtToken = localStorage.getItem('jwt-token')
-        try {
-            const response = await fetch(`http://localhost:3000/api/countries/US`,
-                {
-                    method:
-                        'GET',
-                    headers: {
-                        Authorization: `Bearer ${jwtToken}`
-                    }
-    
-                })
-            const { data } = await response.json()
-            console.log(data)
-            return data
-            //$('#exampleModal').modal('toggle')
-            //const modalChartSelector = document.querySelector('#modal-country')
-            //crearChartModal(data.location, data.confirmed, data.deaths, data.recovered, data.active, modalChartSelector)
-        }
-        catch (error) {
-            console.log(error)
-        }
-    }
-    */
+
+
+
