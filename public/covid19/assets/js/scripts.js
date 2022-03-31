@@ -217,4 +217,3 @@ const imprimirTabla = async () => {
 //realizando el modal
 
 /// seleccion de los botones
-
