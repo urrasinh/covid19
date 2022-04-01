@@ -143,13 +143,11 @@ formularioSelector.addEventListener("submit", async (event) => {
     // llamado asincrono de Apis
     const llamadosApi = [
         consumirDatosApiConfirmed(), consumirDatosApiRecovered(), consumirDatosApiDeaths()
-]
+    ]
     const [resultadosConfirmed, resultadosRecovered, resultadosDeaths] = await Promise.all(llamadosApi)
-    console.log(resultadosConfirmed)
-    console.log(resultadosRecovered)
-    console.log(resultadosDeaths)
+
     mostrarGrafico(resultadosConfirmed, resultadosRecovered, resultadosDeaths)
-    console.log(resultadosConfirmed)
+
 })
 
 botonLoginSelector.addEventListener("click", () => {

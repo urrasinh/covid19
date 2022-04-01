@@ -2,8 +2,11 @@ const formularioSelector = document.querySelector('#formulario')
 const emailSelector = document.querySelector('#email')
 const passwordSelector = document.querySelector('#password')
 const mostrarTablaSelector = document.querySelector('#cuerpo-tabla')
+const modalChartSelector = document.querySelector('#myChartModal')
 
+let graficoDatosPais = null
 
+const datosPaisModal = new bootstrap.Modal(document.querySelector('#exampleModal'), {})
 
 // funcionalidad para iniciar sesión con la api
 const iniciarSesionConApi = async (email, password) => {
@@ -38,10 +41,34 @@ const consumirDatosApiCovid = async () => {
         return []
     }
 }
-const datoModalPais = async (pais) => {
+
+const crearChart = (location, active, confirmed, recovered, deaths, modalChartSelector) => {
+    console.log(location, active, confirmed, recovered, deaths, modalChartSelector)
+
+    graficoDatosPais = new Chart(document.getElementById('pie-chart'), {
+        type: 'pie',
+        data: {
+            labels: ['Activos', 'Confirmados', 'Recuperados', 'Muertos'],
+            datasets: [{
+                label: 'Population (millions)',
+                backgroundColor: ['#3e95cd', '#8e5ea2', '#3cba9f', '#e8c3b9', '#c45850'],
+                data: [active, confirmed, recovered, deaths]
+            }]
+        },
+        options: {
+            title: {
+                display: true,
+                text: 'Predicted world population (millions) in 2050'
+            }
+        }
+    });
+}
+
+const datoModalPais = async (locationText) => {
+    //const pais = locationText
     const jwtToken = localStorage.getItem('jwt-token')
     try {
-        const response = await fetch(`http://localhost:3000/api/countries/${pais}`,
+        const response = await fetch(`http://localhost:3000/api/countries/${locationText}`,
             {
                 method:
                     'GET',
@@ -51,9 +78,11 @@ const datoModalPais = async (pais) => {
 
             })
         const { data } = await response.json()
-        console.log(data)
+        // $('#exampleModal').modal('toggle') // Agrega la propiedad toggle a nuestro modal
+        crearChart(data.location, data.active, data.confirmed, data.recovered, data.deaths, modalChartSelector)
+
         return data
-        //$('#exampleModal').modal('toggle')
+
         //const modalChartSelector = document.querySelector('#modal-country')
         //crearChartModal(data.location, data.confirmed, data.deaths, data.recovered, data.active, modalChartSelector)
     }
@@ -114,8 +143,6 @@ const pintarGraficos = (datosParaGrafico) => {
                     type: 'linear',
                     display: true,
                     position: 'right',
-
-                    // grid line settings
                     grid: {
                         drawOnChartArea: false,
                     },
@@ -131,8 +158,8 @@ const pintarGraficos = (datosParaGrafico) => {
 formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
     // TODO: se comentaron y remplaron las const entregando de inmediato los datos
-    const emailValor = "Telly.Hoeger@billy.biz"
-    const passwordValor = "secret"
+    const emailValor = 'Telly.Hoeger@billy.biz'
+    const passwordValor = 'secret'
     //const emailValor = emailSelector.value
     //const passwordValor = passwordSelector.value
 
@@ -151,39 +178,42 @@ formularioSelector.addEventListener('submit', async (event) => {
 
 const crearTd = (texto) => {
     const text = document.createTextNode(texto);
-    const td = document.createElement("td");
+    const td = document.createElement('td');
     td.appendChild(text);
     return td;
 };
 
 const crearTr = () => {
-    return document.createElement("tr");
+    return document.createElement('tr');
 };
 
 const manejadorDeClick = async (e) => {
     const indice = e.target.dataset.indice;
     const location = e.target.dataset.location;
     console.log(indice, location);
+    // destroy para limpiar gráficos
+    // https://www.chartjs.org/docs/latest/developers/api.html
+    if (graficoDatosPais !== null) {
+        graficoDatosPais.destroy()
+    }
     const pais = await datoModalPais(location)
     console.log(pais)
-    const myModal = new bootstrap.Modal(
-        document.getElementById('exampleModal'),
-        {})
-    //mostrar modal
-    myModal.show()
+    datosPaisModal.show()
+
 };
 
 const crearTabla = (array) => {
     mostrarTablaSelector.innerHTML = `
         <tr>
-        <th scope="col">LOCATION</th>
-        <th scope="col">CONFIRMED</th>
-        <th scope="col">DEATHS</th>
-        <th scope="col">RECOVERED</th>
-        <th scope="col">ACTIVE</th>
-        <th scope="col">DETAILS</th>
+        <th scope='col'>LOCATION</th>
+        <th scope='col'>CONFIRMED</th>
+        <th scope='col'>DEATHS</th>
+        <th scope='col'>RECOVERED</th>
+        <th scope='col'>ACTIVE</th>
+        <th scope='col'>DETAILS</th>
         </tr>`;
 
+    // Agregar nodo / elemento a const tr
     for (let i = 0; i < array.length; i++) {
         const tr = crearTr();
         tr.appendChild(crearTd(array[i].location));
@@ -192,14 +222,14 @@ const crearTabla = (array) => {
         tr.appendChild(crearTd(array[i].recovered));
         tr.appendChild(crearTd(array[i].active));
 
-        const tdButton = crearTd("");
-        const button = document.createElement("button");
+        const tdButton = crearTd('');
+        const button = document.createElement('button');
         button.dataset.location = array[i].location;
         button.dataset.indice = i;
-        button.addEventListener("click", manejadorDeClick);
+        button.addEventListener('click', manejadorDeClick);
 
-        button.classList.add("btn", "btn-link", "boton-modal");
-        const buttonText = document.createTextNode("Ver detalles");
+        button.classList.add('btn', 'btn-link', 'boton-modal');
+        const buttonText = document.createTextNode('Ver detalles');
         button.appendChild(buttonText);
         tdButton.appendChild(button);
         tr.appendChild(tdButton);
@@ -214,6 +244,3 @@ const imprimirTabla = async () => {
     crearTabla(mostrarDatos)
 }
 
-//realizando el modal
-
-/// seleccion de los botones
