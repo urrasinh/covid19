@@ -2,9 +2,9 @@
 
 ## Descripción proyecto
 
-COVID-19 es un proyecto desarrollado por un grupo de estudiantes dentro del Bootcamp Fullstack Javascript Trainee al año 2022,  en el que puedes ver expreasado mediante gráficos,  tanto la situación mundial de Covid, asi como ver en detalle la de cada país y en profundidad la situación de Chile. 
-
-### Contenido usado en Situación Mundial:
+COVID-19 es un sitio web desarrollado por un grupo de estudiantes dentro del Bootcamp Fullstack Javascript Trainee al año 2022,  en el que el usuario puede ver expreasado mediante gráficos, tanto la situación mundial de Covid, asi como ver en detalle la de cada país del mundo y en profundidad cómo ha ido evolucionando el  Covid-19 diariamente en Chile. 
+ 
+### Contenido usado en la página principal sobre la situación mundial:
 Implementamos la estructura del proyecto, hacemos consumo de API, desplegamos un gráfico de barra global, además de mostrar la tabla con sus datos,  y por ultimo, usamos un Modal para mostrar  gráfico de torta la información de cada país. 
 
 ### Contenido usado en Situación de Chile:
