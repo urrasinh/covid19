@@ -13,11 +13,11 @@ const cerrarGraficoSelector = document.querySelector('#grafico')
 const iniciarSesionModal = new bootstrap.Modal(document.querySelector('#modal-principal'), {})
 
 
-// ocultar elementos del menu (situción chile, cerrar sesion)
+
 menuItemSituacionChileSelector.style.display = 'none'
 menuItemLogoutSelector.style.display = 'none'
 
-// const confirmados = resultadosConfirmed.map(p)
+
 
 
 const mostrarGrafico = (resultadosConfirmed, resultadosRecovered, resultadosDeaths) => {
