@@ -14,31 +14,31 @@ const iniciarSesionModal = new bootstrap.Modal(document.querySelector('#modal-pr
 
 
 // ocultar elementos del menu (situción chile, cerrar sesion)
-menuItemSituacionChileSelector.style.display = "none"
-menuItemLogoutSelector.style.display = "none"
+menuItemSituacionChileSelector.style.display = 'none'
+menuItemLogoutSelector.style.display = 'none'
 
 // const confirmados = resultadosConfirmed.map(p)
 
 
 const mostrarGrafico = (resultadosConfirmed, resultadosRecovered, resultadosDeaths) => {
-    new Chart(document.getElementById("grafico"), {
+    new Chart(document.getElementById('grafico'), {
         type: 'line',
         data: {
             labels: resultadosConfirmed.map(p => p.date),
             datasets: [{
                 data: resultadosConfirmed.map(p => p.total),
-                label: "Confimados",
-                borderColor: "#3e95cd",
+                label: 'Confimados',
+                borderColor: '#3e95cd',
                 fill: false
             }, {
                 data: resultadosRecovered.map(p => p.total),
-                label: "Recuperados",
-                borderColor: "#8e5ea2",
+                label: 'Recuperados',
+                borderColor: '#8e5ea2',
                 fill: false
             }, {
                 data: resultadosDeaths.map(p => p.total),
-                label: "Muertos",
-                borderColor: "#3cba9f",
+                label: 'Muertos',
+                borderColor: '#3cba9f',
                 fill: false
             },
             ]
@@ -53,7 +53,7 @@ const mostrarGrafico = (resultadosConfirmed, resultadosRecovered, resultadosDeat
 }
 const postData = async (email, password) => {
     try {
-        const response = await fetch("http://localhost:3000/api/login", // Consulta para crear token
+        const response = await fetch('http://localhost:3000/api/login', // Consulta para crear token
             {
                 method: 'POST', // Crear el token
                 body: JSON.stringify({ email, password }),
@@ -130,16 +130,16 @@ const consumirDatosApiDeaths = async () => {
     }
 }
 
-formularioSelector.addEventListener("submit", async (event) => {
+formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
     const dataUser = await postData(emailSelector.value, passwordSelector.value)
     //console.log(dataUser)
     iniciarSesionModal.hide()
     // agregar elementos al menu
-    menuItemSituacionChileSelector.style.display = "list-item"
-    menuItemLogoutSelector.style.display = "list-item"
+    menuItemSituacionChileSelector.style.display = 'list-item'
+    menuItemLogoutSelector.style.display = 'list-item'
     // ocultando item menu (iniciar sesion)
-    menuItemLoginSelector.style.display = "none"
+    menuItemLoginSelector.style.display = 'none'
     // llamado asincrono de Apis
     const llamadosApi = [
         consumirDatosApiConfirmed(), consumirDatosApiRecovered(), consumirDatosApiDeaths()
@@ -150,16 +150,16 @@ formularioSelector.addEventListener("submit", async (event) => {
 
 })
 
-botonLoginSelector.addEventListener("click", () => {
+botonLoginSelector.addEventListener('click', () => {
     iniciarSesionModal.show()
 })
 
-botonLogoutSelector.addEventListener("click", () => {
+botonLogoutSelector.addEventListener('click', () => {
     localStorage.setItem('jwt-token', '')
-    menuItemSituacionChileSelector.style.display = "none"
-    menuItemLogoutSelector.style.display = "none"
-    menuItemLoginSelector.style.display = "list-item"
-    cerrarGraficoSelector.style.display = "none"
+    menuItemSituacionChileSelector.style.display = 'none'
+    menuItemLogoutSelector.style.display = 'none'
+    menuItemLoginSelector.style.display = 'list-item'
+    cerrarGraficoSelector.style.display = 'none'
 })
 
 // const manejadorClick = () => {
