@@ -21,9 +21,9 @@ Insertamos una barra de navegación, levantamos un Modal con un formulario para 
   
 ## Cómo se usa
   
-  Abre el formulario e ingresa como usuario:
-`Telly.Hoeger`
-  y somo clave:
+  Abra el formulario e ingrese como usuario:
+`Telly.Hoeger@billy.biz`
+  y como clave:
 `secret`
 
 ## Cómo contribuir
