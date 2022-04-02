@@ -8,7 +8,7 @@ COVID-19 es un sitio web desarrollado por un grupo de estudiantes dentro del Boo
 Implementamos la estructura del proyecto, hacemos consumo de API, desplegamos un gráfico de barras global, además de mostrar la tabla con sus datos,  y por ultimo, usamos un Modal para mostrar  gráfico de torta la información de cada país. 
 
 ### Contenido usado en Situación de Chile:
-Insertamos una barra de navegación, levantamos un Modal con un formulario para iniciar sesion, se genera el JWT al ingresar credenciales válidas., desplegamos un gráfico linear y finalmente es posible apreciar toda la funcionalidad del sitio web.
+Insertamos una barra de navegación, levantamos un Modal con un formulario para iniciar sesion, se genera el JWT al ingresar credenciales válidas. Desplegamos un gráfico linear y finalmente es posible apreciar toda la funcionalidad del sitio web.
 
 ## Instrucciones de instalación
 
