@@ -1,3 +1,4 @@
+// Selectores del DOM
 const formularioSelector = document.querySelector('#formulario')
 const emailSelector = document.querySelector('#email')
 const passwordSelector = document.querySelector('#password')
@@ -10,16 +11,14 @@ const botonLoginSelector = document.querySelector('#boton-login')
 const botonLogoutSelector = document.querySelector('#boton-logout')
 const cerrarGraficoSelector = document.querySelector('#grafico')
 
+// crea un nuevo modal con ID
 const iniciarSesionModal = new bootstrap.Modal(document.querySelector('#modal-principal'), {})
 
-
-
+// oculta item de menu
 menuItemSituacionChileSelector.style.display = 'none'
 menuItemLogoutSelector.style.display = 'none'
 
-
-
-
+// Gráfico de datos Chile
 const mostrarGrafico = (resultadosConfirmed, resultadosRecovered, resultadosDeaths) => {
     new Chart(document.getElementById('grafico'), {
         type: 'line',
@@ -49,30 +48,29 @@ const mostrarGrafico = (resultadosConfirmed, resultadosRecovered, resultadosDeat
                 text: 'Situación Covid-19 Chile (in milliones)'
             }
         }
-    });
+    })
 }
+
+// funcion asíncrona que consume de API Login que recibe parametros de acceso utilizando metodo POST
 const postData = async (email, password) => {
     try {
-        const response = await fetch('http://localhost:3000/api/login', // Consulta para crear token
+        const response = await fetch('http://localhost:3000/api/login',
             {
-                method: 'POST', // Crear el token
+                method: 'POST',
                 body: JSON.stringify({ email, password }),
             })
         const { token } = await response.json()
-        localStorage.setItem('jwt-token', token) // Persistiendo el token
+        localStorage.setItem('jwt-token', token)
         return token
     } catch (err) {
-        //console.error(`Error: ${err}`)
-        document.querySelector('#modal-footer').innerHTML = err.message;
+        console.error(`Error: ${err} `)
     }
 }
 
 
-// llamado a la Api Confirmed
 const consumirDatosApiConfirmed = async () => {
     try {
         const jwtToken = localStorage.getItem('jwt-token')
-        //console.log(jwtToken)
         const response = await fetch('http://localhost:3000/api/confirmed',
             {
                 method: 'GET',
@@ -81,19 +79,16 @@ const consumirDatosApiConfirmed = async () => {
                 }
             })
         const { data } = await response.json()
-        //console.log(data)
+
         return data
     } catch (err) {
         console.error(`Error: ${err} `)
-
     }
 }
 
-// llamado a la Api Recovered
 const consumirDatosApiRecovered = async () => {
     try {
         const jwtToken = localStorage.getItem('jwt-token')
-        //console.log(jwtToken)
         const response = await fetch('http://localhost:3000/api/recovered',
             {
                 method: 'GET',
@@ -102,15 +97,13 @@ const consumirDatosApiRecovered = async () => {
                 }
             })
         const { data } = await response.json()
-        //console.log(data)
+
         return data
     } catch (err) {
         console.error(`Error: ${err} `)
-
     }
 }
 
-// llamado a la Api Deaths
 const consumirDatosApiDeaths = async () => {
     try {
         const jwtToken = localStorage.getItem('jwt-token')
@@ -122,44 +115,41 @@ const consumirDatosApiDeaths = async () => {
                 }
             })
         const { data } = await response.json()
-        //console.log(data)
         return data
     } catch (err) {
         console.error(`Error: ${err} `)
-
     }
 }
 
+// se escucha submit del formulario iniciar sesión
 formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
     const dataUser = await postData(emailSelector.value, passwordSelector.value)
-    //console.log(dataUser)
-    iniciarSesionModal.hide()
-    // agregar elementos al menu
-    menuItemSituacionChileSelector.style.display = 'list-item'
-    menuItemLogoutSelector.style.display = 'list-item'
-    // ocultando item menu (iniciar sesion)
-    menuItemLoginSelector.style.display = 'none'
-    // llamado asincrono de Apis
+    iniciarSesionModal.hide() //esconde modal
+    menuItemSituacionChileSelector.style.display = 'list-item'  // muestra item de menu Situación Chile
+    menuItemLogoutSelector.style.display = 'list-item' // muestra item de menu cerrar sesión
+    menuItemLoginSelector.style.display = 'none' //esconde item de menu iniciar sesion
+
     const llamadosApi = [
-        consumirDatosApiConfirmed(), consumirDatosApiRecovered(), consumirDatosApiDeaths()
+        consumirDatosApiConfirmed(), consumirDatosApiRecovered(), consumirDatosApiDeaths() 
     ]
     const [resultadosConfirmed, resultadosRecovered, resultadosDeaths] = await Promise.all(llamadosApi)
-
-    mostrarGrafico(resultadosConfirmed, resultadosRecovered, resultadosDeaths)
-
+    mostrarGrafico(resultadosConfirmed, resultadosRecovered, resultadosDeaths) // muestra datos si se cumple la promesa
 })
 
+// evento click para mostrar el modal 
 botonLoginSelector.addEventListener('click', () => {
     iniciarSesionModal.show()
 })
 
+
+// evento click que cierra sesión
 botonLogoutSelector.addEventListener('click', () => {
-    localStorage.setItem('jwt-token', '')
+    localStorage.setItem('jwt-token', '') // se vacia localstorage
     menuItemSituacionChileSelector.style.display = 'none'
     menuItemLogoutSelector.style.display = 'none'
     menuItemLoginSelector.style.display = 'list-item'
     cerrarGraficoSelector.style.display = 'none'
 })
 
-// const manejadorClick = () => {
+

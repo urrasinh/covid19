@@ -1,29 +1,31 @@
+// Selectores del DOM (index.html)
 const formularioSelector = document.querySelector('#formulario')
 const emailSelector = document.querySelector('#email')
 const passwordSelector = document.querySelector('#password')
 const mostrarTablaSelector = document.querySelector('#cuerpo-tabla')
-const modalChartSelector = document.querySelector('#myChartModal')
+const modalChartSelector = document.querySelector('#modalDetalles')
 
+// variable let que se define "vacio" para posterior manipulación
 let graficoDatosPais = null
+// crea un nuevo modal con ID
+const datosPaisModal = new bootstrap.Modal(document.querySelector('#modalParaDatos'), {})
 
-const datosPaisModal = new bootstrap.Modal(document.querySelector('#exampleModal'), {})
-
-// funcionalidad para iniciar sesión con la api
+// funcion asíncrona que consume de API Login que recibe parametros de acceso utilizando metodo POST
 const iniciarSesionConApi = async (email, password) => {
-    console.log(email, password)
     try {
         const response = await fetch('http://localhost:3000/api/login',
             {
                 method: 'POST',
-                body: JSON.stringify({ email: email, password: password })
+                body: JSON.stringify({ email, password })
             })
         const { token } = await response.json()
-        localStorage.setItem('jwt-token', token) //persistir el js, lo que significa que va a quedar guardado en el navegador
+        localStorage.setItem('jwt-token', token)
     } catch (err) {
         console.error(`Error: ${err}`)
     }
 }
 
+// funcion asíncrona que consume API datos paises que recibe valores con el metodo GET
 const consumirDatosApiCovid = async () => {
     try {
         const jwtToken = localStorage.getItem('jwt-token')
@@ -42,9 +44,8 @@ const consumirDatosApiCovid = async () => {
     }
 }
 
+// Funcion que muestra datos en graficos modal
 const crearChart = (location, active, confirmed, recovered, deaths, modalChartSelector) => {
-    console.log(location, active, confirmed, recovered, deaths, modalChartSelector)
-
     graficoDatosPais = new Chart(document.getElementById('pie-chart'), {
         type: 'pie',
         data: {
@@ -58,47 +59,40 @@ const crearChart = (location, active, confirmed, recovered, deaths, modalChartSe
         options: {
             title: {
                 display: true,
-                text: 'Predicted world population (millions) in 2050'
             }
         }
     });
 }
 
-const datoModalPais = async (locationText) => {
-    //const pais = locationText
+// funcion asíncrona que consume API de datos de cada paises para mostrar datos en el modal
+const datoModalApiPais = async (pais) => {
     const jwtToken = localStorage.getItem('jwt-token')
     try {
-        const response = await fetch(`http://localhost:3000/api/countries/${locationText}`,
+        const response = await fetch(`http://localhost:3000/api/countries/${pais}`,
             {
                 method:
                     'GET',
                 headers: {
                     Authorization: `Bearer ${jwtToken}`
                 }
-
             })
         const { data } = await response.json()
-        // $('#exampleModal').modal('toggle') // Agrega la propiedad toggle a nuestro modal
+        // se pasan parametros contenidos en el api a la función "crearChart" para usarlos en modal
         crearChart(data.location, data.active, data.confirmed, data.recovered, data.deaths, modalChartSelector)
-
         return data
-
-        //const modalChartSelector = document.querySelector('#modal-country')
-        //crearChartModal(data.location, data.confirmed, data.deaths, data.recovered, data.active, modalChartSelector)
     }
     catch (error) {
         console.log(error)
     }
 }
 
-
+// filtro de datos para gráfico
 const pintarGraficos = (datosParaGrafico) => {
     const datosFiltradosContagio = datosParaGrafico.filter(datoPais => {
-        return datoPais.confirmed >= 10000000
+        return datoPais.confirmed >= 1000000 
     })
 
     const ctx = document.getElementById('grafico');
-
     const data = {
         labels: datosFiltradosContagio.map(p => p.location),
         datasets: [
@@ -106,14 +100,14 @@ const pintarGraficos = (datosParaGrafico) => {
                 label: 'Confirmados',
                 data: datosFiltradosContagio.map(p => p.confirmed),
                 borderColor: 'red',
-                backgroundColor: 'red',
+                backgroundColor: '#f18a8a',
                 yAxisID: 'y1'
             },
             {
                 label: 'Muertos',
                 data: datosFiltradosContagio.map(p => p.deaths),
                 borderColor: 'blue',
-                backgroundColor: 'blue',
+                backgroundColor: '#aecfff',
                 yAxisID: 'y2'
             }
         ]
@@ -130,7 +124,7 @@ const pintarGraficos = (datosParaGrafico) => {
                 },
                 title: {
                     display: true,
-                    text: 'Chart.js Bar Chart'
+                    text: 'SITUACIÓN MUNDIAL COVID-19'
                 },
             },
             scales: {
@@ -150,32 +144,24 @@ const pintarGraficos = (datosParaGrafico) => {
             }
         },
     };
-
+    // se instancia el grafico
     const myChart = new Chart(ctx, config)
 }
 
-
+// se escucha submit del formulario para ejecutar gráfico y tabla
 formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
-    // TODO: se comentaron y remplaron las const entregando de inmediato los datos
-    const emailValor = 'Telly.Hoeger@billy.biz'
-    const passwordValor = 'secret'
-    //const emailValor = emailSelector.value
-    //const passwordValor = passwordSelector.value
-
+    const emailValor = emailSelector.value
+    const passwordValor = passwordSelector.value
     await iniciarSesionConApi(emailValor, passwordValor)
     const jwtToken = localStorage.getItem('jwt-token')
-    console.log(jwtToken)
     const resultado = await consumirDatosApiCovid()
-    console.log(resultado)
     pintarGraficos(resultado)
     imprimirTabla();
 })
 
 
-
-// Intentando imprimir datos Api en tabla :S
-
+// funciones que crea los elementos td y tr
 const crearTd = (texto) => {
     const text = document.createTextNode(texto);
     const td = document.createElement('td');
@@ -187,33 +173,19 @@ const crearTr = () => {
     return document.createElement('tr');
 };
 
-const manejadorDeClick = async (e) => {
-    const indice = e.target.dataset.indice;
-    const location = e.target.dataset.location;
-    console.log(indice, location);
-    // destroy para limpiar gráficos
-    // https://www.chartjs.org/docs/latest/developers/api.html
-    if (graficoDatosPais !== null) {
-        graficoDatosPais.destroy()
-    }
-    const pais = await datoModalPais(location)
-    console.log(pais)
-    datosPaisModal.show()
 
-};
-
+// agregar tabla con datos en el html
 const crearTabla = (array) => {
     mostrarTablaSelector.innerHTML = `
         <tr>
-        <th scope='col'>LOCATION</th>
-        <th scope='col'>CONFIRMED</th>
-        <th scope='col'>DEATHS</th>
-        <th scope='col'>RECOVERED</th>
-        <th scope='col'>ACTIVE</th>
-        <th scope='col'>DETAILS</th>
+        <th scope='col'>PAIS</th>
+        <th scope='col'>CONFIRMADOS</th>
+        <th scope='col'>MUERTES</th>
+        <th scope='col'>RECUPERADOS</th>
+        <th scope='col'>ACTIVOS</th>
+        <th scope='col'>DETALLES</th>
         </tr>`;
-
-    // Agregar nodo / elemento a const tr
+    // se agregan nodos con "appendChild" utilizando un ciclo donde se escriben los datos de cada iteración
     for (let i = 0; i < array.length; i++) {
         const tr = crearTr();
         tr.appendChild(crearTd(array[i].location));
@@ -223,24 +195,36 @@ const crearTabla = (array) => {
         tr.appendChild(crearTd(array[i].active));
 
         const tdButton = crearTd('');
-        const button = document.createElement('button');
+        const button = document.createElement('button'); // crea elemento botón
         button.dataset.location = array[i].location;
         button.dataset.indice = i;
-        button.addEventListener('click', manejadorDeClick);
+        button.addEventListener('click', manejadorClickDetalles);
 
-        button.classList.add('btn', 'btn-link', 'boton-modal');
-        const buttonText = document.createTextNode('Ver detalles');
-        button.appendChild(buttonText);
-        tdButton.appendChild(button);
-        tr.appendChild(tdButton);
+        button.classList.add('btn', 'btn-link', 'boton-modal'); // estilos de boton
+        const buttonText = document.createTextNode('Ver detalles'); // botón ver detalles
+        button.appendChild(buttonText); 
+        tdButton.appendChild(button);  
+        tr.appendChild(tdButton); // Se crean nodos para botón 
 
         mostrarTablaSelector.appendChild(tr);
     }
 };
 
+// está función asíncrona ejecuta lo definido en la tabla
 const imprimirTabla = async () => {
     const mostrarDatos = await consumirDatosApiCovid()
-    console.log(mostrarDatos)
     crearTabla(mostrarDatos)
 }
 
+const manejadorClickDetalles = async (e) => {
+    const indice = e.target.dataset.indice;
+    const location = e.target.dataset.location;
+    // destroy para limpiar gráficos
+    // https://www.chartjs.org/docs/latest/developers/api.html
+    if (graficoDatosPais !== null) {
+        graficoDatosPais.destroy()
+    }
+    const pais = await datoModalApiPais(location)
+    datosPaisModal.show()
+
+};
