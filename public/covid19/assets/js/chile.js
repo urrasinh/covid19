@@ -3,7 +3,6 @@ const formularioSelector = document.querySelector('#formulario')
 const emailSelector = document.querySelector('#email')
 const passwordSelector = document.querySelector('#password')
 const cuerpoModalSelector = document.querySelector('#cuerpo-modal')
-const cerrarModalSelector = document.querySelectorAll('.cerrar-modal')
 const menuItemSituacionChileSelector = document.querySelector('#menu-item-situacion-chile')
 const menuItemLoginSelector = document.querySelector('#menu-item-login')
 const menuItemLogoutSelector = document.querySelector('#menu-item-logout')
@@ -67,7 +66,6 @@ const postData = async (email, password) => {
     }
 }
 
-
 const consumirDatosApiConfirmed = async () => {
     try {
         const jwtToken = localStorage.getItem('jwt-token')
@@ -124,11 +122,11 @@ const consumirDatosApiDeaths = async () => {
 // se escucha submit del formulario iniciar sesión
 formularioSelector.addEventListener('submit', async (event) => {
     event.preventDefault()
-    const dataUser = await postData(emailSelector.value, passwordSelector.value)
-    iniciarSesionModal.hide() //esconde modal
+    await postData(emailSelector.value, passwordSelector.value)
+    iniciarSesionModal.hide() // esconde modal
     menuItemSituacionChileSelector.style.display = 'list-item'  // muestra item de menu Situación Chile
     menuItemLogoutSelector.style.display = 'list-item' // muestra item de menu cerrar sesión
-    menuItemLoginSelector.style.display = 'none' //esconde item de menu iniciar sesion
+    menuItemLoginSelector.style.display = 'none' // esconde item de menu iniciar sesion
 
     const llamadosApi = [
         consumirDatosApiConfirmed(), consumirDatosApiRecovered(), consumirDatosApiDeaths() 
@@ -141,7 +139,6 @@ formularioSelector.addEventListener('submit', async (event) => {
 botonLoginSelector.addEventListener('click', () => {
     iniciarSesionModal.show()
 })
-
 
 // evento click que cierra sesión
 botonLogoutSelector.addEventListener('click', () => {
