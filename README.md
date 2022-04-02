@@ -2,13 +2,13 @@
 
 ## Descripción proyecto
 
-COVID-19 es un proyecto desarrollado por un grupo de estudiantes dentro del Bootcamp Fullstack Javascript Trainee al año 2022,  en el que puedes ver expreasado mediante graficos,  tanto la situación mundial de Covid, asi como ver en detalle la de cada país y en profundidad la situación de Chile. 
-
-### Contenido usado en Situación Mundial:
-Implementamos la estructura del proyecto, hacemos consumo de API, desplegamos un gráfico de barra global, además de mostrar la tabla con sus datos,  y por ultimo, usamos un Modal para mostrar  gráfico de pie la información de cada país. 
+COVID-19 es un sitio web desarrollado por un grupo de estudiantes dentro del Bootcamp Fullstack Javascript Trainee al año 2022,  en el que se podrá ver expreasado mediante gráficos, la situación actual del Covid-19 a nivel mundial (contagiados, muertos y recuperados), así como ver en detalle la de cada país y en profundidad cómo ha ido evolucionando el Covid-19 diariamente en Chile. 
+ 
+### Contenido usado en la página principal sobre la situación mundial:
+Implementamos la estructura del proyecto, hacemos consumo de API, desplegamos un gráfico de barras global, además de mostrar la tabla con sus datos,  y por ultimo, usamos un Modal para mostrar  gráfico de torta la información de cada país. 
 
 ### Contenido usado en Situación de Chile:
-Barra de navegación, levantamos un Modal, implementamos JWT, desplegamos un gráfico linear y finalmente es posible apreciar toda la funcionalidad del sitio web.
+Insertamos una barra de navegación, levantamos un Modal con un formulario para iniciar sesion, se genera el JWT al ingresar credenciales válidas., desplegamos un gráfico linear y finalmente es posible apreciar toda la funcionalidad del sitio web.
 
 ## Instrucciones de instalación
 
@@ -21,12 +21,17 @@ Barra de navegación, levantamos un Modal, implementamos JWT, desplegamos un gr�
   
 ## Cómo se usa
   
-  Abre el formulario e ingresa como usuario:
-`Telly.Hoeger`
-  y somo clave:
+  Abra el formulario e ingrese como usuario:
+`Telly.Hoeger@billy.biz`
+  y como clave:
 `secret`
+## Librerías usadas
++ [Bootstrap 5.1.3](https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css)
++ [Chart JS 3.7.1](https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js)
 
-## Cómo contribuir
+## Quiénes contribuyeron
 
-Puedes crear un pull request al proyecto
++ [Katherine Flores](https://github.com/)
++ [Guillermo Urra](https://github.com/urrasinh)
++ [Melanie Pardo](https://github.com/melaniepardo)
 
