@@ -25,8 +25,13 @@ Insertamos una barra de navegación, levantamos un Modal con un formulario para 
 `Telly.Hoeger@billy.biz`
   y como clave:
 `secret`
+## Librerías usadas
++ [Bootstrap 5.1.3](https://cdn.jsdelivr.net/npm/bootstrap@5.1.3/dist/css/bootstrap.min.css)
++ [Chart JS 3.7.1](https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js)
 
-## Cómo contribuir
+## Quiénes contribuyeron
 
-Puedes crear un pull request al proyecto
++ [Katherine Flores](https://github.com/)
++ [Guillermo Urra](https://github.com/urrasinh)
++ [Melanie Pardo](https://github.com/melaniepardo)
 
